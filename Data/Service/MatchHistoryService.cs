@@ -1,28 +1,26 @@
 ﻿using GrpcService.Data.SettingsDb;
 using GrpcService.Models.ModelsDTO;
 using GrpcService.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GrpcService.Data.Service
 {
-    public class MatchHistoryService
+    public class MatchHistoryService : IService<MatchHistory, MatchHistoryDto> 
     {
         protected readonly ApplicationContext _context;
 
-        public MatchHistoryService(ApplicationContext context)
-        {
-            _context = context;
-        }
+        public MatchHistoryService(ApplicationContext context) => _context = context;
 
-        public MatchHistory CreateMatchHistory(MatchHistory matchHistory)
+        public async Task<MatchHistory> Create(MatchHistory matchHistory)
         {
-            _context.History.Add(matchHistory);
-            _context.SaveChanges();
+            await _context.History.AddAsync(matchHistory);
+            await _context.SaveChangesAsync();
             return matchHistory;
         }
 
-        public bool UpdateMatchHistory(Guid id, MatchHistoryDto matchHistoryDto)
+        public async Task<bool> Update(Guid id, MatchHistoryDto matchHistoryDto)
         {
-            var matchHistory = _context.History.Find(id);
+            var matchHistory = await _context.History.FindAsync(id);
             if (matchHistory == null)
             {
                 return false;
@@ -33,21 +31,23 @@ namespace GrpcService.Data.Service
             matchHistory.WinnerId = matchHistoryDto.WinnerId;
             matchHistory.BetAmount = matchHistoryDto.BetAmount;
             matchHistory.Status = matchHistoryDto.Status;
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public bool DeletematchHistory(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            var matchHistory = _context.History.Find(id);
+            var matchHistory = await _context.History.FindAsync(id);
             if (matchHistory == null)
             {
                 return false;
             }
             _context.History.Remove(matchHistory);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public List<MatchHistory> GetmatchHistorys() => _context.History.ToList();
+        public async Task<List<MatchHistory>> Get() => await _context.History.ToListAsync();
+        public async Task<MatchHistory> GetElement(Guid id) => await _context.History.FirstOrDefaultAsync(u => u.Id == id);
     }
 }

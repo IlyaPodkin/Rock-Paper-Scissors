@@ -2,7 +2,6 @@
 using GrpcService.Data.SettingsDb;
 using GrpcService.Models;
 using GrpcService.Models.ModelsDTO;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GrpcService.Controllers
@@ -11,54 +10,51 @@ namespace GrpcService.Controllers
     {
         private readonly UserService _user;
 
-        public UserController(UserService user, ApplicationContext context)
-        {
-            _user = user;
-        }
+        public UserController(UserService user, ApplicationContext context) => _user = user;
 
         [HttpPost("user")]
-        public IActionResult Create([FromBody] User user) 
+        public async Task<IActionResult> CreateUser([FromBody] User user) 
         {
-            User result = _user.CreateUser(user);
+            User result = await _user.Create(user);
             if (result == null) 
             {
-                return BadRequest("Пользователи не найдены");
+                return BadRequest("Пользователь с таким id уже существует");
             }
             return Ok(result);
         }
 
         [HttpGet("user")]
-        public IActionResult Get() => Ok(_user.GetUsers());
+        public async Task<IActionResult> GetAllUsers() => Ok(await _user.Get());
 
-        //[HttpGet("user/{id}")]
-        //public IActionResult GetUser(Guid id) 
-        //{
-        //    User result = _context.Users.Find(id);
-        //    if (result == null) 
-        //    {
-        //        BadRequest("Такого пользователя не существует");
-        //    }
-        //    return Ok(_context.Users.Find(id)); 
-        //}
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUser(Guid id)
+        {
+            User result = await _user.GetElement(id);
+            if (result == null)
+            {
+                return NotFound("Такого пользователя не существует");
+            }
+            return Ok(result);
+        }
 
         [HttpPut("user/{id}")]
-        public IActionResult Update([FromBody] UserDto userDto, Guid id) 
+        public async Task<IActionResult> UpdateUser([FromBody] UserDto userDto, Guid id) 
         {
-            bool result = _user.UpdateUser(id, userDto);
+            bool result = await _user.Update(id, userDto);
             if (result == false) 
             {
-                return BadRequest("Такого пользователя не существует");
+                return NotFound("Такого пользователя не существует");
             }
             return Ok();
         }
 
         [HttpDelete("user/{id}")]
-        public IActionResult Delete(Guid id) 
+        public async Task<IActionResult> DeleteUser(Guid id) 
         {
-            bool result = _user.DeleteUser(id);
+            bool result = await _user.Delete(id);
             if (result == false)
             {
-                return BadRequest("Такого пользователя не существует");
+                return NotFound("Такого пользователя не существует");
             }
             return Ok();
         }

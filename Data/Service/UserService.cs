@@ -5,25 +5,27 @@ using GrpcService.Data.SettingsDb;
 
 namespace GrpcService.Data.Service
 {
-    public class UserService
+    public class UserService : IService<User, UserDto>
     {
         protected readonly ApplicationContext _context;
 
-        public UserService(ApplicationContext context)
-        {
-            _context = context;
-        }
+        public UserService(ApplicationContext context) => _context = context;
 
-        public User CreateUser(User user)
+        public async Task<User> Create(User user)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            User result = await _context.Users.FirstOrDefaultAsync(u => u.Id == user.Id);
+            if (result != null)
+            {
+                return null;
+            }
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
             return user;
         }
 
-        public bool UpdateUser(Guid id, UserDto userDto)
+        public async Task<bool> Update(Guid id, UserDto userDto)
         {
-            var user = _context.Users.Find(id);
+            var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
                 return false;
@@ -31,22 +33,24 @@ namespace GrpcService.Data.Service
             user.Name = userDto.Name;
             user.Balance = userDto.Balance;
             user.CreatedAt = userDto.CreatedAt;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public bool DeleteUser(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
-            var user = _context.Users.Find(id);
+            var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
                 return false;
             }
             _context.Users.Remove(user);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return true;
         }
 
-        public List<User> GetUsers() => _context.Users.ToList();
+        public async Task<List<User>> Get() => await _context.Users.ToListAsync();
+        public async Task<User> GetElement(Guid id) => await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+
     }
 }
