@@ -12,7 +12,7 @@ namespace GrpcService.Controllers
 
         public GameTransactionController(GameTransactionService gameTransaction, ApplicationContext context) => _gameTransaction = gameTransaction;
 
-        [HttpPost("history")]
+        [HttpPost("transaction")]
         public async Task<IActionResult> CreateGameTransaction([FromBody] GameTransaction gameTransaction)
         {
             GameTransaction result = await _gameTransaction.Create(gameTransaction);
@@ -23,10 +23,10 @@ namespace GrpcService.Controllers
             return Ok(result);
         }
 
-        [HttpGet("history")]
+        [HttpGet("transaction")]
         public async Task<IActionResult> Get() => Ok(await _gameTransaction.Get());
 
-        [HttpGet("history/{id}")]
+        [HttpGet("transaction/{id}")]
         public async Task<IActionResult> GetGameTransaction(Guid id)
         {
             GameTransaction result = await _gameTransaction.GetElement(id);
@@ -37,7 +37,7 @@ namespace GrpcService.Controllers
             return Ok(result);
         }
 
-        [HttpPut("history/{id}")]
+        [HttpPut("transaction/{id}")]
         public async Task<IActionResult> UpdateGameTransaction([FromBody] GameTransactionDto gameTransactionDto, Guid id)
         {
             bool result = await _gameTransaction.Update(id, gameTransactionDto);
@@ -48,7 +48,7 @@ namespace GrpcService.Controllers
             return Ok();
         }
 
-        [HttpDelete("history/{id}")]
+        [HttpDelete("transaction/{id}")]
         public async Task<IActionResult> DeleteGameTransaction(Guid id)
         {
             bool result = await _gameTransaction.Delete(id);
