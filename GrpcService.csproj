@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\UserGrpc.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\GameTransactionGrpc.proto" GrpcServices="Server" />
+    <Protobuf Include="Protos\MatchHistoryGrpc.proto" GrpcServices="Server" />
   </ItemGroup>
 
   <ItemGroup>
