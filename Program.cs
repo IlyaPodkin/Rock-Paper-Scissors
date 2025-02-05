@@ -10,15 +10,6 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ConfigureEndpointDefaults(endpointOptions =>
-    {
-        endpointOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1AndHttp2;
-    });
-});
-
-builder.Services.AddGrpc();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<GameTransactionService>();
 builder.Services.AddScoped<MatchHistoryService>();
