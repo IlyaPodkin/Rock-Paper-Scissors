@@ -1,14 +1,13 @@
 body {
     width: 100%;
     height: 100%;
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(248, 247, 194);
     margin: 0;
     padding: 0;
 }
 
 .main {
     height: 100vh;
-    background-color: rgb(80, 179, 179);
     display: flex;
     margin: 0;
     padding: 0;

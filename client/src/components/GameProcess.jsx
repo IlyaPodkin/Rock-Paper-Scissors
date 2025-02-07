@@ -7,9 +7,9 @@ import "./../styles/game-process.css";
 const GameProcess = () => {
     return(
         <div className="command-conteiner">
-            <button><img src={Rock} alt="Камень" /></button>
-            <button><img src={Scissors} alt="Ножницы" /></button>
-            <button><img src={Paper} alt="Бумага" /></button>
+            <button className="command"><img className="command" src={Rock} alt="Камень" /></button>
+            <button className="command"><img className="command" src={Scissors} alt="Ножницы" /></button>
+            <button className="command"><img className="command" src={Paper} alt="Бумага" /></button>
         </div>
     );
 };
